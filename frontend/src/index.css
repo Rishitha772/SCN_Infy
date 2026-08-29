@@ -1,0 +1,80 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-navy-50: #f0f4f8;
+  --color-navy-100: #e2e8f0;
+  --color-navy-200: #cbd5e1;
+  --color-navy-300: #94a3b8;
+  --color-navy-400: #64748b;
+  --color-navy-450: #36b7c9; /* Scientific Cyan Accent */
+  --color-navy-500: #167d9a; /* Teal Secondary */
+  --color-navy-600: #123b63; /* Deep Scientific Blue Primary */
+  --color-navy-650: #123b63;
+  --color-navy-700: #0e2e4e; /* Darker Primary Hover */
+  --color-navy-800: #0a2037;
+  --color-navy-900: #071524;
+  --color-navy-950: #172033; /* Primary Text */
+
+  --color-slate-50: #f7f9fc; /* Cool Off-White Background */
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-800: #1e293b;
+  --color-slate-850: #0f172a;
+  --color-slate-900: #172033; /* Slate 900 mapped to Primary Text */
+  --color-slate-950: #0f172a; /* Slate 950 mapped to deep background */
+
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.01), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.01);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.03), 0 3px 6px rgba(0, 0, 0, 0.02);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+@utility btn-primary {
+  @apply bg-navy-600 hover:bg-navy-700 active:bg-navy-800 text-white font-semibold rounded-lg shadow-sm transition-all duration-150 inline-flex items-center justify-center;
+}
+@utility btn-secondary {
+  @apply bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold rounded-lg shadow-sm transition-all duration-150 inline-flex items-center justify-center;
+}
+@utility btn-teal {
+  @apply bg-navy-500 hover:bg-navy-600 active:bg-navy-700 text-white font-semibold rounded-lg shadow-sm transition-all duration-150 inline-flex items-center justify-center;
+}
+@utility card-sci {
+  @apply bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 rounded-xl shadow-sm hover:shadow-md transition-shadow p-6;
+}
+@utility badge-sci {
+  @apply px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans antialiased transition-colors duration-200;
+  }
+  
+  body.dark {
+    @apply bg-slate-950 text-slate-50;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700 rounded-full hover:bg-slate-400 dark:hover:bg-slate-600;
+}
+
+/* Custom glassmorphism classes */
+.glass-panel {
+  @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50;
+}

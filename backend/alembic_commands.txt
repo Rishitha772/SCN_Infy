@@ -1,0 +1,47 @@
+ALEMBIC SETUP
+
+(use "uv run" when you are not in a virtual environment)
+
+initialise inside backend/ folder:
+-> uv run alembic init migrations
+
+open alembic.ini, find this line and clear it:
+default - hardcoded url : sqlalchemy.url = driver://user:pass@localhost/dbname
+clear it - set it dynamically in env.py : sqlalchemy.url =
+
+update migrations/env.py file
+
+generate first migration:
+-> uv run alembic revision --autogenerate -m "initial tables"
+You will see a new file in migrations/versions/ .py.
+Open it and verify it shows your tables being created.
+
+apply migration:
+-> uv run alembic upgrade head
+
+To upgrade to a specific revision:
+-> alembic upgrade <revision_id>
+
+Downgrade Migrations
+Revert last migration:
+-> alembic downgrade -1
+
+To downgrade to a specific revision:
+-> alembic downgrade <revision_id>
+
+View Current DB Revision
+-> alembic current
+
+Generate a new migration
+-> uv run alembic revision --autogenerate -m "update models"
+Alembic will create a new file in migrations/versions/.
+
+Check History of Migrations
+-> alembic history
+
+Show Detailed Info of a Migration
+-> alembic show <revision_id>
+
+Stamp DB without applying migrations
+Useful if you want Alembic to think the DB is up-to-date without actually running the migration:
+-> alembic stamp head

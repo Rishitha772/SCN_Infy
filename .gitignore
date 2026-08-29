@@ -1,0 +1,23 @@
+# Ignore VS Code settings
+.vscode/
+
+# Ignore __pycache__
+__pycache__/
+
+# Ignore log files
+*.log
+
+# Ignore build output
+dist/
+build/
+
+# Ignore all JSON files in data folder
+backend/data/*.json
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+*.db
+
+# Ignore environment files
+.env
