@@ -39,12 +39,12 @@ async def test_register_success_with_role(client: AsyncClient) -> None:
     assert "message" in res.json()
 
 
-async def test_register_invalid_domain(client: AsyncClient) -> None:
+async def test_register_invalid_email(client: AsyncClient) -> None:
     res: Response = await client.post(
-        REGISTER_URL, json={"email": "user@gmail.com", "password": PASSWORD}
+        REGISTER_URL, json={"email": "notanemail", "password": PASSWORD}
     )
     assert res.status_code == 422
-    assert "recognised institution" in str(res.json())
+    assert "value is not a valid email address" in str(res.json()) or "email" in str(res.json())
 
 
 async def test_register_password_no_letter(client: AsyncClient) -> None:
@@ -210,12 +210,12 @@ async def test_request_email_change_success(
     assert "verification" in res.json()["message"].lower()
 
 
-async def test_request_email_change_invalid_domain(
+async def test_request_email_change_invalid_email(
     client: AsyncClient, researcher_user: User
 ) -> None:
     res: Response = await client.post(
         f"{AUTH_URL}/request-email-change",
-        json={"new_email": "newemail@gmail.com"},
+        json={"new_email": "notanemail"},
         headers=auth_headers(researcher_user),
     )
     assert res.status_code == 422

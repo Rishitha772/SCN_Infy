@@ -13,6 +13,9 @@ export const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const [provider, setProvider] = useState<'email' | 'gmail' | 'outlook'>('email');
+  const [showOAuthModal, setShowOAuthModal] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -26,6 +29,22 @@ export const Login: React.FC = () => {
       setError(err.message || 'Failed to authenticate.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getPlaceholder = () => {
+    switch (provider) {
+      case 'gmail': return 'dr.singhal@gmail.com';
+      case 'outlook': return 'dr.singhal@outlook.com';
+      default: return 'dr.singhal@university.edu';
+    }
+  };
+
+  const getLabel = () => {
+    switch (provider) {
+      case 'gmail': return 'Gmail Address';
+      case 'outlook': return 'Outlook Address';
+      default: return 'Institutional Email';
     }
   };
 
@@ -43,16 +62,63 @@ export const Login: React.FC = () => {
           <p className="text-xs text-slate-500">Access your academic and collaboration workspace.</p>
         </div>
 
-        {/* Demo Helper Alert Box */}
-        <div className="p-3 bg-navy-50/60 dark:bg-navy-950/30 border border-navy-100 dark:border-navy-900/50 rounded-lg text-[11px] text-navy-600 dark:text-navy-400 leading-relaxed">
-          <span className="font-bold">Demo Accounts Password: </span> 
-          <code className="bg-navy-100 dark:bg-navy-900/60 px-1 py-0.5 rounded font-mono">password123</code>
-          <ul className="list-disc pl-4 mt-1 space-y-0.5">
-            <li>Singhal: <code className="font-mono">dr.singhal@university.edu</code> (PI/Researcher)</li>
-            <li>Khandesh: <code className="font-mono">dr.khandesh@university.edu</code> (Researcher)</li>
-            <li>Admin: <code className="font-mono">admin@university.edu</code> (System Admin)</li>
-          </ul>
+        {/* Auth Provider Selector */}
+        <div className="space-y-1">
+          <label className="text-xs font-semibold text-slate-655 dark:text-slate-400 font-medium">Sign in with</label>
+          <div className="grid grid-cols-3 gap-2 p-1 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+            {[
+              { id: 'email' as const, label: 'Email', icon: '✉️' },
+              { id: 'gmail' as const, label: 'Gmail', icon: '🌐' },
+              { id: 'outlook' as const, label: 'Outlook', icon: '📧' }
+            ].map(prov => (
+              <button
+                key={prov.id}
+                type="button"
+                onClick={() => {
+                  setProvider(prov.id);
+                  setError('');
+                }}
+                className={`flex items-center justify-center gap-1.5 py-2 px-1 rounded-lg text-xs font-bold transition-all ${
+                  provider === prov.id
+                    ? 'bg-white dark:bg-slate-800 text-navy-650 dark:text-navy-400 shadow-sm border border-slate-200 dark:border-slate-700'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-750 dark:hover:text-slate-250'
+                }`}
+              >
+                <span className="text-xs">{prov.icon}</span>
+                <span>{prov.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
+
+        {/* Social Fast Signin Option */}
+        {provider !== 'email' && (
+          <button
+            type="button"
+            onClick={() => setShowOAuthModal(true)}
+            className={`w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-950 text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
+              provider === 'gmail' 
+                ? 'text-red-650 dark:text-red-400 border-red-100 dark:border-red-900/30 bg-red-50/20' 
+                : 'text-sky-655 dark:text-sky-400 border-sky-100 dark:border-sky-900/30 bg-sky-50/20'
+            }`}
+          >
+            <span>{provider === 'gmail' ? '🌐' : '📧'}</span>
+            <span>Fast Sign in with {provider === 'gmail' ? 'Google' : 'Microsoft'}</span>
+          </button>
+        )}
+
+        {/* Demo Helper Alert Box */}
+        {provider === 'email' && (
+          <div className="p-3 bg-navy-50/60 dark:bg-navy-950/30 border border-navy-100 dark:border-navy-900/50 rounded-lg text-[11px] text-navy-600 dark:text-navy-400 leading-relaxed animate-fade-in">
+            <span className="font-bold">Demo Accounts Password: </span> 
+            <code className="bg-navy-100 dark:bg-navy-900/60 px-1 py-0.5 rounded font-mono">password123</code>
+            <ul className="list-disc pl-4 mt-1 space-y-0.5">
+              <li>Singhal: <code className="font-mono">dr.singhal@university.edu</code> (PI/Researcher)</li>
+              <li>Khandesh: <code className="font-mono">dr.khandesh@university.edu</code> (Researcher)</li>
+              <li>Admin: <code className="font-mono">admin@university.edu</code> (System Admin)</li>
+            </ul>
+          </div>
+        )}
 
         {/* Error message */}
         {error && (
@@ -65,11 +131,11 @@ export const Login: React.FC = () => {
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">Institutional Email</label>
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">{getLabel()}</label>
             <input 
               type="email" 
               required
-              placeholder="e.g. dr.singhal@university.edu"
+              placeholder={`e.g. ${getPlaceholder()}`}
               className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 rounded-xl text-sm focus:border-navy-500 focus:outline-none transition-colors"
               value={email}
               onChange={e => setEmail(e.target.value)}
@@ -123,6 +189,62 @@ export const Login: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Floating simulated OAuth Consent Modal */}
+      {showOAuthModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4">
+          <div className="w-full max-w-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 space-y-4 animate-scale-in">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{provider === 'gmail' ? '🌐' : '📧'}</span>
+                <h3 className="font-bold text-sm text-slate-850 dark:text-slate-100">
+                  Sign in with {provider === 'gmail' ? 'Google' : 'Microsoft'}
+                </h3>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setShowOAuthModal(false)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              SCN Portal requests permission to authenticate using your registered social profile:
+            </p>
+            
+            <div className="space-y-2">
+              {[
+                { name: 'Dr. Jane Doe', email: provider === 'gmail' ? 'jane.doe@gmail.com' : 'jane.doe@outlook.com' },
+                { name: 'Dr. Singhal', email: provider === 'gmail' ? 'dr.singhal@gmail.com' : 'dr.singhal@outlook.com' },
+                { name: 'Dr. Khandesh', email: provider === 'gmail' ? 'dr.khandesh@gmail.com' : 'dr.khandesh@outlook.com' }
+              ].map((account, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={async () => {
+                    setEmail(account.email);
+                    setPassword('password123'); // Autofill default password
+                    setShowOAuthModal(false);
+                  }}
+                  className="w-full p-3 flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-850 hover:bg-slate-55 dark:hover:bg-slate-900/80 transition-all text-left"
+                >
+                  <div className="w-8 h-8 rounded-full bg-navy-100 dark:bg-navy-950/40 text-navy-600 dark:text-navy-400 flex items-center justify-center font-bold text-xs uppercase">
+                    {account.name.split(' ').pop()?.[0] || 'U'}
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-slate-850 dark:text-slate-200">{account.name}</p>
+                    <p className="text-[10px] text-slate-550 dark:text-slate-400">{account.email}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <div className="pt-2 text-[10px] text-slate-450 dark:text-slate-500 leading-relaxed text-center">
+              By continuing, you authorize SCN Portal to retrieve session credentials.
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

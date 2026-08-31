@@ -36,12 +36,12 @@ def test_valid_academic_email(email: str) -> None:
     [
         "user@gmail.com",
         "user@hotmail.com",
-        "user@fake.com",
+        "user@outlook.com",
     ],
 )
-def test_invalid_non_academic_email(email: str) -> None:
-    with pytest.raises(ValidationError, match="recognised institution"):
-        UserRequest(email=email, password=VALID_PASSWORD)
+def test_valid_social_email(email: str) -> None:
+    user = UserRequest(email=email, password=VALID_PASSWORD)
+    assert user.email == email
 
 
 # Password
@@ -203,15 +203,11 @@ def test_role_change_request_system_admin_rejected() -> None:
 
 
 # Email change request
-def test_email_change_request_invalid_domain() -> None:
-    with pytest.raises(
-        expected_exception=ValidationError, match="recognised institution"
-    ):
-        EmailChangeRequest(new_email="user@gmail.com")
+def test_email_change_request_gmail() -> None:
+    req = EmailChangeRequest(new_email="user@gmail.com")
+    assert req.new_email == "user@gmail.com"
 
 
-def test_email_change_request_valid_domain() -> None:
-    with pytest.raises(
-        expected_exception=ValidationError, match="recognised institution"
-    ):
-        EmailChangeRequest(new_email="user@oxford.ac.uk")
+def test_email_change_request_academic() -> None:
+    req = EmailChangeRequest(new_email="user@oxford.ac.uk")
+    assert req.new_email == "user@oxford.ac.uk"

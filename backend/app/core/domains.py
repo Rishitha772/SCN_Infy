@@ -70,5 +70,5 @@ async def load_domains() -> None:
 
 
 def is_research_email(email: str) -> bool:
-    domain: str = email.split("@")[-1].lower()
-    return domain in research_domains
+    # Relax domain validation to allow all domains (including gmail and outlook)
+    return True

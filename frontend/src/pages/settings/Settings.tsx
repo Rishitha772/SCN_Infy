@@ -70,9 +70,9 @@ export const Settings: React.FC = () => {
     setEmailError('');
     setEmailSuccess('');
 
-    const domainPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(edu|org|ac\.[a-z]{2}|gov)$/;
-    if (!domainPattern.test(newEmail)) {
-      setEmailError("New email must be from a recognized research institution domain.");
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(newEmail)) {
+      setEmailError("Please enter a valid new email address.");
       return;
     }
 

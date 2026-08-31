@@ -35,10 +35,15 @@ DBSession = Annotated[AsyncSession, Depends(get_db)]
 Token = Annotated[str, Depends(oauth2_scheme)]
 
 
-# -- Service factories --
 @lru_cache
 def get_email_notifier() -> EmailNotifier:
-    if config.DEBUG or config.TESTING:
+    has_smtp = (
+        config.SMTP_USER
+        and config.SMTP_USER != "your-email@gmail.com"
+        and config.SMTP_PASSWORD.get_secret_value()
+        and config.SMTP_PASSWORD.get_secret_value() != "your-app-password"
+    )
+    if (config.DEBUG or config.TESTING) and not has_smtp:
         return ConsoleEmailNotifier()
     smtp_config = SMTPConfig(
         host=config.SMTP_HOST,

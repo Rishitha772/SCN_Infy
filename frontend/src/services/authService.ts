@@ -20,10 +20,10 @@ export class AuthService {
       throw new Error("User already exists. Please log in.");
     }
 
-    // Inst domain validation check
-    const domainPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(edu|org|ac\.[a-z]{2}|gov)$/;
-    if (!domainPattern.test(credentials.email)) {
-      throw new Error("Registration email must be from a recognized academic or research institution (.edu, .org, etc.)");
+    // Relaxed email domain check to allow academic domains, gmail, and outlook
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(credentials.email)) {
+      throw new Error("Please enter a valid email address.");
     }
 
     if (!credentials.password || credentials.password.length < 8) {
